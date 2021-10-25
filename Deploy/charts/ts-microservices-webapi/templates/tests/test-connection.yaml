@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "ts-microservices-webapi.fullname" . }}-test-connection"
+  labels:
+{{ include "ts-microservices-webapi.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "ts-microservices-webapi.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

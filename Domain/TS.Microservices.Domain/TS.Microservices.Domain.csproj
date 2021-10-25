@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\TS.Microservices.Domain.Abstractions\TS.Microservices.Domain.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

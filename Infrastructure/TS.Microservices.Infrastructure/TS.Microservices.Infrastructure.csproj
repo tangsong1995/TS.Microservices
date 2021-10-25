@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\TS.Microservices.Domain\TS.Microservices.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\TS.Microservices.Infrastructure.Core\TS.Microservices.Infrastructure.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ts-microservices-healthcheckshost.fullname" . }}
+  labels:
+    {{- include "ts-microservices-healthcheckshost.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "ts-microservices-healthcheckshost.selectorLabels" . | nindent 4 }}

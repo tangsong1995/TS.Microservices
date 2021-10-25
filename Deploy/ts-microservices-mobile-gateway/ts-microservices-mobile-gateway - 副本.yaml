@@ -1,0 +1,81 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ts-microservices-mobile-gateway
+  namespace: default
+  labels:
+    app: ts-microservices-mobile-gateway
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ts-microservices-mobile-gateway
+    spec:
+      containers:
+      - name: ts-microservices-mobile-gateway
+        image: "ts-microservices-mobile-gateway:v1.0.0"
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: "/app/appsettings.json"
+            name: appsettings
+            subPath: appsettings-v1.0.0.json
+        ports:
+        - containerPort: 80
+        env:
+          - name: USE_Forwarded_Headers
+            value: "false"
+          - name: MyEnv
+            value: "value from env"
+          - name: ENV_ABC
+            valueFrom:
+              configMapKeyRef:
+                name: ts-config
+                key: ENV_ABC
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          successThreshold: 1
+          timeoutSeconds: 2
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          periodSeconds: 3
+          successThreshold: 2
+          timeoutSeconds: 2
+          failureThreshold: 3
+        resources:
+            limits:
+              cpu: 1000m
+              memory: 2048Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: appsettings
+          configMap:
+              name: ts-microservices-mobile-gateway-config
+      restartPolicy: Always
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-microservices-mobile-gateway
+  namespace: default
+  labels:
+    app: ts-microservices-mobile-gateway
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: ts-microservices-mobile-gateway

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "ts-microservices-mobile-gateway.fullname" . }}-test-connection"
+  labels:
+{{ include "ts-microservices-mobile-gateway.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "ts-microservices-mobile-gateway.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

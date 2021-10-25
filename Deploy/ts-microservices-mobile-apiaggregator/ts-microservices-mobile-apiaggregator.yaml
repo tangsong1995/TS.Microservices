@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ts-microservices-mobile-apiaggregator
+  namespace: default
+  labels:
+    app: ts-microservices-mobile-apiaggregator
+spec:
+  selector:
+    matchLabels:
+      app: ts-microservices-mobile-apiaggregator
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ts-microservices-mobile-apiaggregator
+    spec:
+      containers:
+      - name: ts-microservices-mobile-apiaggregator
+        image: "ts-microservices-mobile-apiaggregator:v1.0.0"
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: "/app/appsettings.json"
+            name: appsettings
+            subPath: appsettings-v1.0.0.json
+        ports:
+        - containerPort: 80
+        - containerPort: 81
+        env:
+          - name: MyEnv
+            value: "value from env"
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          successThreshold: 1
+          timeoutSeconds: 2
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          periodSeconds: 3
+          successThreshold: 2
+          timeoutSeconds: 2
+          failureThreshold: 3
+        resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: appsettings
+          configMap:
+              name: ts-microservices-mobile-apiaggregator-config
+      restartPolicy: Always
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ts-microservices-mobile-apiaggregator
+  namespace: default
+  labels:
+    app: "ts-microservices-mobile-apiaggregator"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  - port: 81
+    targetPort: 81
+    protocol: TCP
+    name: http2
+  selector:
+    app: ts-microservices-mobile-apiaggregator
