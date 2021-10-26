@@ -1776,7 +1776,7 @@ prometheus:
         any: true
       selector:
         matchLabels:
-          geek: app-metrics
+          ts: app-metrics
       endpoints:
         - path: /metrics
           port: http
@@ -1785,7 +1785,7 @@ prometheus:
         any: true
       selector:
         matchLabels:
-          geek: app-metrics
+          ts: app-metrics
       endpoints:
         - path: /metrics
           port: http
