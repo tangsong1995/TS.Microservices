@@ -41,7 +41,7 @@ helm.sh/chart: {{ include "ts-microservices-healthcheckshost.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-geek: app-metrics
+ts: app-metrics
 {{- end -}}
 
 {{/*
